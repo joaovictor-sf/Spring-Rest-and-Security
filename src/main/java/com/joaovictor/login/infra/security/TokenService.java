@@ -19,12 +19,16 @@ public class TokenService {
 
     public String generateToken(User user){
         try {
+            //Algorith cria o token com o algoritmo HMAC256
             Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            //Cria o token com o algoritmo e o usuário
             String token = JWT.create()
-                    .withIssuer("auth-api")
-                    .withSubject(user.getLogin())
-                    .withExpiresAt(getExpirationDate())
-                    .sign(algorithm);
+                    .withIssuer("auth-api")//Emissor do token
+                    .withSubject(user.getLogin())//Sujeito do token
+                    .withExpiresAt(getExpirationDate())//Data de expiração do token
+                    .sign(algorithm);//Assinatura do token
+
             return token;
         }catch (JWTCreationException exception){
             //Invalid Signing configuration / Couldn't convert Claims.
@@ -37,6 +41,8 @@ public class TokenService {
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            //Verifica se o token é válido
             String subject = JWT.require(algorithm)
                     .withIssuer("auth-api")
                     .build()

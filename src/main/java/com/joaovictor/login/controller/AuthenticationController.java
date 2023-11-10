@@ -32,11 +32,16 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
+        //Cria um token com o login e senha
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+
+        //Autentica o token
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
+        //Gera um token JWT
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
+        //Retorna o token
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
